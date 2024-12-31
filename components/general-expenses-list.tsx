@@ -1,3 +1,7 @@
+'use client'
+
+import { toast } from '@/components/ui/use-toast'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -18,10 +22,36 @@ interface Expense {
 
 interface GeneralExpensesListProps {
   expenses: Expense[]
+  onExpenseDeleted: () => void
 }
 
-export function GeneralExpensesList({ expenses }: GeneralExpensesListProps) {
+export function GeneralExpensesList({ expenses, onExpenseDeleted }: GeneralExpensesListProps) {
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0)
+
+  const handleDelete = async (id: number) => {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
+      try {
+        const response = await fetch(`/api/agritrack_general_expenses/${id}`, {
+          method: 'DELETE',
+        })
+        if (response.ok) {
+          toast({
+            title: "Succès",
+            description: "La dépense a été supprimée avec succès",
+          })
+          onExpenseDeleted()
+        } else {
+          throw new Error('Failed to delete expense')
+        }
+      } catch (error) {
+        toast({
+          title: "Erreur",
+          description: "Une erreur s'est produite lors de la suppression de la dépense",
+          variant: "destructive",
+        })
+      }
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -42,6 +72,7 @@ export function GeneralExpensesList({ expenses }: GeneralExpensesListProps) {
             <TableHead>Montant</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Notes</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -51,6 +82,11 @@ export function GeneralExpensesList({ expenses }: GeneralExpensesListProps) {
               <TableCell>{expense.amount.toLocaleString('fr-FR', { style: 'currency', currency: 'MAD' })}</TableCell>
               <TableCell>{new Date(expense.date).toLocaleDateString('fr-FR')}</TableCell>
               <TableCell>{expense.notes}</TableCell>
+              <TableCell>
+                <Button variant="destructive" size="sm" onClick={() => handleDelete(expense.id)}>
+                  Supprimer
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

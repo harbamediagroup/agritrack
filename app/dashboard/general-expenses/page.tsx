@@ -72,7 +72,7 @@ export default function GeneralExpensesPage() {
       {isLoading ? (
         <div>Chargement des dépenses...</div>
       ) : (
-        <GeneralExpensesList expenses={expenses} />
+        <GeneralExpensesList expenses={expenses} onExpenseDeleted={fetchExpenses} />
       )}
     </div>
   )
