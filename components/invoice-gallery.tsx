@@ -63,12 +63,20 @@ export function InvoiceGallery({ projectId }: { projectId: string }) {
   }
 
   const cleanUrl = (url: string | string[]) => {
+    // Log the original URL for debugging
+    console.log('Original URL:', url)
+
     // If it's an array, take the first item
     let cleanedUrl = Array.isArray(url) ? url[0] : url
-    // Remove any extra characters or wrapping
-    cleanedUrl = cleanedUrl.replace(/^\["@|"\]$/g, '').trim()
-    // Remove any extra quotes
-    cleanedUrl = cleanedUrl.replace(/['"]/g, '')
+    console.log('After array check:', cleanedUrl)
+
+    // Extract the actual URL using regex
+    const urlMatch = cleanedUrl.match(/https:\/\/[^"\s\]]+/);
+    if (urlMatch) {
+      cleanedUrl = urlMatch[0];
+    }
+    console.log('Final cleaned URL:', cleanedUrl)
+
     return cleanedUrl
   }
 
