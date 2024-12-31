@@ -19,11 +19,13 @@ interface Project {
   id: string
   name: string
   status: string
+  description: string
   start_date: string
-  updated_at: string
+  end_date: string | null
   size: string
   location: string
   total_expenses: number
+  updated_at: string
 }
 
 export function ProjectList() {
@@ -39,7 +41,12 @@ export function ProjectList() {
     try {
       const response = await fetch('/api/agritrack_projects')
       const data = await response.json()
-      setProjects(data.projects)
+      const processedProjects = data.projects.map((project: any) => ({
+        ...project,
+        description: project.description || '',
+        end_date: project.end_date || null,
+      }))
+      setProjects(processedProjects)
     } catch (error) {
       console.error('Erreur lors de la récupération des projets:', error)
     } finally {

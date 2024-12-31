@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import {
   Table,
   TableBody,
@@ -32,13 +32,7 @@ export function ProjectExpenses({ projectId, startDate, endDate }: ProjectExpens
   const [isLoading, setIsLoading] = useState(true)
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null)
 
-  useEffect(() => {
-    if (projectId) {
-      fetchExpenses()
-    }
-  }, [projectId, startDate, endDate])
-
-  const fetchExpenses = async () => {
+  const fetchExpenses = useCallback(async () => {
     try {
       let url = `/api/agritrack_projects/${projectId}/expenses`
       const params = new URLSearchParams()
@@ -63,7 +57,13 @@ export function ProjectExpenses({ projectId, startDate, endDate }: ProjectExpens
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [projectId, startDate, endDate])
+
+  useEffect(() => {
+    if (projectId) {
+      fetchExpenses()
+    }
+  }, [projectId, fetchExpenses])
 
   const handleDelete = async (id: number) => {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {

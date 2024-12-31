@@ -7,6 +7,15 @@ import { BankTransfersOverview } from "@/components/bank-transfers-overview"
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 
+interface ProjectExpense {
+  amount: string
+}
+
+interface Project {
+  agritrack_project_expenses: ProjectExpense[]
+  status: string
+}
+
 export default async function DashboardPage() {
   const supabase = createServerComponentClient({ cookies })
 
@@ -24,8 +33,8 @@ export default async function DashboardPage() {
   const totalProjects = projects?.length || 0
   const activeProjects = projects?.filter(p => p.status === 'en_cours').length || 0
   
-  const totalExpenses = projects?.reduce((sum, project) => {
-    const projectExpenses = project.agritrack_project_expenses.reduce((total, expense) => 
+  const totalExpenses = projects?.reduce((sum: number, project: Project) => {
+    const projectExpenses = project.agritrack_project_expenses.reduce((total: number, expense: ProjectExpense) => 
       total + (parseFloat(expense.amount) || 0), 0)
     return sum + projectExpenses
   }, 0) || 0
@@ -49,8 +58,8 @@ export default async function DashboardPage() {
   const lastMonthTotalProjects = lastMonthProjects?.length || 0
   const lastMonthActiveProjects = lastMonthProjects?.filter(p => p.status === 'en_cours').length || 0
   
-  const lastMonthTotalExpenses = lastMonthProjects?.reduce((sum, project) => {
-    const projectExpenses = project.agritrack_project_expenses.reduce((total, expense) => 
+  const lastMonthTotalExpenses = lastMonthProjects?.reduce((sum: number, project: Project) => {
+    const projectExpenses = project.agritrack_project_expenses.reduce((total: number, expense: ProjectExpense) => 
       total + (parseFloat(expense.amount) || 0), 0)
     return sum + projectExpenses
   }, 0) || 0

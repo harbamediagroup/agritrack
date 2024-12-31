@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { PlusCircle, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -24,11 +24,7 @@ export default function ProjectDetailPage({ params }: { params: { projectId: str
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
 
-  useEffect(() => {
-    fetchProjectDetails()
-  }, [])
-
-  const fetchProjectDetails = async () => {
+  const fetchProjectDetails = useCallback(async () => {
     try {
       const response = await fetch(`/api/agritrack_projects/${params.projectId}`)
       const data = await response.json()
@@ -44,7 +40,11 @@ export default function ProjectDetailPage({ params }: { params: { projectId: str
     } catch (error) {
       console.error('Error fetching project details:', error)
     }
-  }
+  }, [params.projectId])
+
+  useEffect(() => {
+    fetchProjectDetails()
+  }, [fetchProjectDetails])
 
   if (!project) {
     return <div>Chargement...</div>

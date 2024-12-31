@@ -1,5 +1,4 @@
 import { DashboardNav } from '@/components/dashboard-nav'
-import { UserNav } from '@/components/user-nav'
 import { GeistSans } from 'geist/font/sans'
 import './globals.css'
 import { Toaster } from "@/components/ui/toaster"
@@ -18,9 +17,8 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={GeistSans.className}>
         <div className="flex min-h-screen flex-col">
-          <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background px-4 lg:px-8">
+          <header className="sticky top-0 z-50 flex h-16 items-center border-b bg-background px-4 lg:px-8">
             <div className="text-xl font-bold">Agri Tracker</div>
-            <UserNav />
           </header>
 
           <div className="flex-1 flex">

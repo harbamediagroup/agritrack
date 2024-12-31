@@ -14,9 +14,11 @@ import {
 } from '@/components/ui/select'
 import { toast } from '@/components/ui/use-toast'
 
+type TransferType = 'Entrant' | 'Sortant'
+
 interface BankTransfer {
   id: number
-  type: 'Entrant' | 'Sortant'
+  type: TransferType
   amount: number
   date: string
   description: string
@@ -29,7 +31,7 @@ interface EditBankTransferProps {
 }
 
 export function EditBankTransfer({ transfer, onComplete, onCancel }: EditBankTransferProps) {
-  const [type, setType] = useState(transfer.type)
+  const [type, setType] = useState<TransferType>(transfer.type)
   const [amount, setAmount] = useState(transfer.amount.toString())
   const [date, setDate] = useState(transfer.date)
   const [description, setDescription] = useState(transfer.description)
@@ -72,13 +74,13 @@ export function EditBankTransfer({ transfer, onComplete, onCancel }: EditBankTra
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="type">Type</Label>
-        <Select value={type} onValueChange={setType}>
+        <Select value={type} onValueChange={(value: TransferType) => setType(value)}>
           <SelectTrigger id="type">
             <SelectValue placeholder="Sélectionnez le type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Entrant">Argent Entrant</SelectItem>
-            <SelectItem value="Sortant">Argent Sortant</SelectItem>
+            <SelectItem value="Entrant">Entrant</SelectItem>
+            <SelectItem value="Sortant">Sortant</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -109,12 +111,15 @@ export function EditBankTransfer({ transfer, onComplete, onCancel }: EditBankTra
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          required
         />
       </div>
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Annuler</Button>
-        <Button type="submit">Enregistrer les modifications</Button>
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Annuler
+        </Button>
+        <Button type="submit">
+          Enregistrer
+        </Button>
       </div>
     </form>
   )

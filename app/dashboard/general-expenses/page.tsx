@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -14,11 +14,7 @@ export default function GeneralExpensesPage() {
   const [expenses, setExpenses] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    fetchExpenses()
-  }, [startDate, endDate])
-
-  const fetchExpenses = async () => {
+  const fetchExpenses = useCallback(async () => {
     setIsLoading(true)
     try {
       let url = '/api/agritrack_general_expenses'
@@ -35,7 +31,11 @@ export default function GeneralExpensesPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [startDate, endDate])
+
+  useEffect(() => {
+    fetchExpenses()
+  }, [fetchExpenses])
 
   return (
     <div className="space-y-6 px-4 md:px-8">
